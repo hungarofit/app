@@ -6,7 +6,7 @@
             <input class="input has-text-right"
                    :class="{'is-fullwidth':expanded}"
                    type="number"
-                   v-model="number" />
+                   v-model.lazy="number" />
         </div>
         <div class="control"
              v-if="unit">
@@ -16,15 +16,13 @@
         </div>
         <div class="control">
             <div class="button"
-                 @mousedown="start(true)"
-                 @touchstart="start(true)">
-                <i class="fa fa-plus"></i>
+                 @mousedown.prevent="start(true)">
+                <i class="fa fa-sm fa-plus"></i>
             </div>
         </div>
         <div class="control">
             <div class="button"
-                 @mousedown="start(false)"
-                 @touchstart="start(false)">
+                 @mousedown.prevent="start(false)">
                 <i class="fa fa-minus"></i>
             </div>
         </div>
@@ -43,10 +41,17 @@
             -moz-appearance: textfield;
         }
 
+        .fa {
+            font-size: 12px;
+        }
+
     }
 </style>
 
 <script>
+    // @todo mobile pressed spin
+  const _timeout = 600;
+  const _interval = 200;
   export default {
     name: 'app-input-number',
     props: {
@@ -138,20 +143,31 @@
     },
     methods: {
       start(decrement) {
-        this.stop();
+        clearInterval(this.spin.timer);
         this.spin.delta = (decrement ? 1 : -1);
         this.spin.start = new Date();
-        this.spin.timer = setInterval(this.tick, 200);
-        this.tick();
+        this.spin.timer = setInterval(this.tick, _timeout);
       },
       tick() {
         const now = new Date();
         const dt = now - this.spin.start;
         const f = this.step * (Math.floor(dt / 1000) + 1);
         this.$emit('input', this.value + (this.spin.delta * f));
+        if(dt >= _timeout) {
+          clearInterval(this.spin.timer);
+          this.spin.timer = setInterval(this.tick, _interval);
+        }
       },
       stop() {
-        clearInterval(this.spin.timer);
+        const now = new Date();
+        const dt = now - this.spin.start;
+        if(this.spin.timer) {
+          if(dt < _timeout) {
+            this.tick();
+          }
+          clearInterval(this.spin.timer);
+          this.spin.timer = null;
+        }
       },
     },
     created() {
@@ -164,12 +180,10 @@
     },
     mounted() {
       document.addEventListener('mouseup', this.stop);
-      document.addEventListener('touchstop', this.stop);
     },
     beforeDestroy() {
       this.stop();
       document.removeEventListener('mouseup', this.stop);
-      document.removeEventListener('touchstop', this.stop);
     },
   }
 </script>
