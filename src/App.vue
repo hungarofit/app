@@ -40,6 +40,13 @@
         }
     }
 
+    .input,
+    .select {
+        &.is-danger {
+            z-index: 1;
+        }
+    }
+
 </style>
 
 <script>

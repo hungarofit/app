@@ -79,7 +79,7 @@
                                 <div class="level is-mobile">
                                     <div class="level-left">
                                         <div class="level-item">
-                                            <strong>Stay up to date!</strong>
+                                            <strong v-html="$gettext('SubscribeTitle')"></strong>
                                         </div>
                                     </div>
                                     <div class="level-right">
@@ -91,7 +91,7 @@
                                                   <span class="icon is-small">
                                                     <i class="fa fa-rss"></i>
                                                   </span>
-                                                <span>Subscribe</span>
+                                                <span v-html="$gettext('Subscribe')"></span>
                                             </a>
                                         </div>
                                     </div>
@@ -105,23 +105,28 @@
             <div class="navbar-end">
 
                 <router-link class="navbar-item"
-                             :to="{name:'register'}">
-                    Register
+                             :to="{name:'register'}"
+                             v-html="$gettext('Register')">
                 </router-link>
 
                 <router-link class="navbar-item"
-                             :to="{name:'login'}">
-                    Login
+                             :to="{name:'login'}"
+                             v-html="$gettext('Login')">
                 </router-link>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">User</a>
+                    <a class="navbar-link"
+                       v-html="$gettext('User')">
+                    </a>
                     <div class="navbar-dropdown">
                         <router-link class="navbar-item"
-                                     :to="{name:'login'}">
-                            My Profile
+                                     :to="{name:'profile'}"
+                                     v-html="$gettext('MyProfile')">
                         </router-link>
-                        <a href="#" class="navbar-item">Logout</a>
+                        <a href="#"
+                           class="navbar-item"
+                           v-html="$gettext('Logout')">
+                        </a>
                     </div>
                 </div>
 

@@ -60,6 +60,10 @@
         type: Number,
         default: undefined,
       },
+      required: {
+        type: Boolean,
+        default: false,
+      },
       step: {
         type: Number,
         default: 1,

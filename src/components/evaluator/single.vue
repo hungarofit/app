@@ -9,7 +9,8 @@
                     </translate>
                     <div class="field has-addons">
                         <div class="control">
-                            <div class="select">
+                            <div class="select"
+                                 :class="{'is-danger':gender===''}">
                                 <select v-model="gender">
                                     <option hidden disabled value=""
                                             v-html="$gettext('Gender')">
@@ -36,24 +37,30 @@
                     <div v-if="!$store.state.master.isFetching"
                          class="field has-addons">
                         <div class="control">
-                            <div class="select">
+                            <div class="select"
+                                 :class="{'is-danger':challenge===''}">
                                 <select v-model="challenge">
                                     <option hidden disabled value=""
                                             v-html="$gettext('Challenge')">
                                     </option>
                                     <option v-for="(text,key) in $store.state.master.challenges"
+                                            :key="key"
                                             :value="key"
                                             v-html="$gettext('challenge-'+key)">
                                     </option>
                                 </select>
                             </div>
                         </div>
-                        <div class="control"
+                        <div class="control is-expanded"
                              v-if="challenge">
-                            <div class="select">
+                            <div class="select is-fullwidth"
+                                 :class="{'is-danger':aerob===''}">
                                 <select v-model="aerob">
                                     <option hidden disabled value=""
                                             v-html="$gettext('Aerob')">
+                                    </option>
+                                    <option value="-"
+                                            v-html="$gettext('AerobSkip')">
                                     </option>
                                     <option v-for="key in $store.state.master.challenges[challenge].aerob"
                                             :value="key"
@@ -76,65 +83,113 @@
                         Results
                     </translate>
                     <div class="field has-addons"
-                         v-for="x in exercises">
+                         v-for="(x, key) in exercises"
+                         :key="key">
                         <div class="control"
                              v-show="challenge">
                             <div class="button is-static"
-                                 v-html="$gettext(x.key)">
+                                 v-html="$gettext(x.name)">
                             </div>
                         </div>
                         <div class="control is-expanded">
-                            <input-number v-model="results[x.name]"
+                            <input-number v-model="results[x.key]"
+                                          :required="true"
                                           :expanded="true"
                                           :min="0"
                                           :max="10000"
                                           :unit="$gettext('unit-'+x.unit.result)"
-                                          :step="x.unit.result === 'min' || x.unit.result === 'm'?0.1:1"
-                                          :decimals="x.unit.result === 'min' || x.unit.result === 'm'?2:0">
+                                          :step="x.name.substr(0,6) !== 'aerob-' && (x.unit.result === 'min' || x.unit.result === 'm') ? 0.1 : 1"
+                                          :decimals="x.name.substr(0,6) !== 'aerob-' && (x.unit.result === 'min' || x.unit.result === 'm') ? 2 : 0">
                             </input-number>
                         </div>
                     </div>
-                    <div v-if="sumResults"
+                    <div v-show="sumResults"
                          class="field">
                         <div class="control">
-                            <div class="button is-primary is-pulled-right is-large"
-                                 :class="{'is-loading':isWorking}"
+                            <div class="button is-pulled-right is-large"
+                                 :class="{'is-loading':isWorking,'is-primary':!rating}"
                                  @click="evaluate">
                                 <translate>Evaluate</translate>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div v-if="sumResults"
-                     class="column is-4">
+                <div v-if="rating > 0"
+                     class="column is-4 rating-container">
                     <translate tag="label" class="label">
                         Rating
                     </translate>
-                    <div class="field" v-for="(point, name) in points">
+                    <div class="field"
+                         v-for="(point, name) in points"
+                         :key="name">
                         <div class="control">
-                            <div class="button is-fullwidth is-static has-text-right">
-                                {{ point }}
+                            <div class="button is-fullwidth is-static has-text-right has-text-weight-bold">
+                                <translate :translateN="point" :translatePlural="'${point} points'" :translateParams="{point:point}">${point} point</translate>
                             </div>
                         </div>
                     </div>
                     <div class="field">
                         <div class="control">
-                            <div class="button is-static is-fullwidth is-large"
-                                 :class="{'is-loading':isWorking}">
-                                0
+                            <div class="rating-sum button is-white is-static is-fullwidth is-large"
+                                 :class="[{'is-loading':isWorking}, 'rating-'+rating]">
+                                {{ $gettext('rating-'+rating) }}
+                                <!--
+                                ({{ rating }})
+                                -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!--
+            <div v-for="rating in 7"
+                 class="rating-sum button is-static is-fullwidth is-large"
+                 :class="[{'is-loading':false}, 'rating-'+rating]">
+                {{ $gettext('rating-'+rating) }}
+                ({{ rating }})
+            </div>
+            -->
+
         </div>
+
     </div>
 </template>
 
 <style lang="scss">
     .app-evaluator-single {
 
+        .rating-container {
+
+            .button.is-static {
+                border: 0;
+            }
+
+            .rating-sum {
+
+                &.rating-1 {
+                    color: hsl(6, 120, 60);
+                }
+                &.rating-2 {
+                    color: hsl(26, 120, 60);
+                }
+                &.rating-3 {
+                    color: hsl(46, 90, 45);
+                }
+                &.rating-4 {
+                    color: hsl(56, 80, 40);
+                }
+                &.rating-5 {
+                    color: hsl(68, 100, 40);
+                }
+                &.rating-6 {
+                    color: hsl(80, 100, 40);
+                }
+                &.rating-7 {
+                    color: hsl(190, 90, 40);
+                }
+            }
+        }
     }
 </style>
 
@@ -157,6 +212,8 @@
         exercises: {},
         results: {},
         points: {},
+        rating: 0,
+        ratingName: '',
       };
     },
     computed: {
@@ -187,9 +244,17 @@
           this.update();
         }
       },
+      results: {
+        handler() {
+          this.rating = 0;
+        },
+        deep: true,
+      },
     },
     methods: {
       empty() {
+        this.rating = 0;
+        this.ratingName = '';
         for(let i in this.exercises) {
           if(this.exercises.hasOwnProperty(i)) {
             this.results[i] = 0;
@@ -201,20 +266,26 @@
         if (this.aerob && !this.$store.state.master.isFetching) {
           let exercises = {};
           let results = {};
+          let points = {};
           const motors = this.$store.state.master.challenges[this.challenge].motor;
-          results[this.aerob] = 0;
-          exercises[this.aerob] = this.$store.state.master.exercises[this.aerob];
-          this.points[this.aerob] = 0;
+          if(this.aerob && this.aerob !== '-') {
+            results[this.aerob] = this.results.hasOwnProperty(this.aerob) ? this.results[this.aerob] : 0;
+            exercises[this.aerob] = this.$store.state.master.exercises[this.aerob];
+            points[this.aerob] = 0;
+          }
           for (let i in motors) {
             if (motors.hasOwnProperty(i)) {
-              const k = 'motor' + this.challenge + '-' + motors[i];
-              results[k] = 0;
+              const k = motors[i];
+              results[k] = this.results.hasOwnProperty(k) ? this.results[k] : 0;
               exercises[k] = this.$store.state.master.exercises[k];
-              this.points[k] = 0;
+              points[k] = 0;
             }
           }
           this.results = results;
           this.exercises = exercises;
+          this.points = points;
+          this.rating = 0;
+          this.ratingName = '';
         }
       },
       evaluate() {
@@ -223,16 +294,22 @@
         }
         this.isWorking = true;
         this.$http.post(this.$apiUrl('/evaluate'), {
+          gender: this.gender,
+          age: this.age,
+          challenge: this.challenge,
           results: this.results,
+        }, {
+          emulateJSON: true,
         }).then(
           r => {
-            console.log(r);
-            const points = r.body.response;
+            const points = r.body.response.points;
             for(let i in points) {
               if(points.hasOwnProperty(i)) {
                 this.points[i] = points[i];
               }
             }
+            this.rating = r.body.response.rating;
+            this.ratingName = r.body.response.ratingName;
           },
           console.error
         ).finally(() => {
