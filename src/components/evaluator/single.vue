@@ -124,7 +124,7 @@
                          :key="name">
                         <div class="control">
                             <div class="button is-fullwidth is-static has-text-right has-text-weight-bold">
-                                <translate :translateN="point" :translatePlural="'${point} points'" :translateParams="{point:point}">${point} point</translate>
+                                <translate :translate-n="point" :translate-plural="'%{point} points'" :translate-params="{point}">%{point} point</translate>
                             </div>
                         </div>
                     </div>
@@ -132,24 +132,13 @@
                         <div class="control">
                             <div class="rating-sum button is-white is-static is-fullwidth is-large"
                                  :class="[{'is-loading':isWorking}, 'rating-'+rating]">
-                                {{ $gettext('rating-'+rating) }}
-                                <!--
-                                ({{ rating }})
-                                -->
+                                <span class="rating-text">{{ $gettext('rating-'+rating) }}</span>
+                                <translate class="rating-points" :translate-params="{point: sumPoints}" :translate-n="sumPoints" translate-plural="%{point} points">%{point} point</translate>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!--
-            <div v-for="rating in 7"
-                 class="rating-sum button is-static is-fullwidth is-large"
-                 :class="[{'is-loading':false}, 'rating-'+rating]">
-                {{ $gettext('rating-'+rating) }}
-                ({{ rating }})
-            </div>
-            -->
 
         </div>
 
@@ -187,6 +176,17 @@
                 }
                 &.rating-7 {
                     color: hsl(190, 90, 40);
+                }
+
+                .rating-text {
+                    font-size: 1.4rem;
+                    padding-right: 4px;
+                    font-weight: bold;
+                }
+
+                .rating-points {
+                    font-size: 1.3rem;
+                    padding-left: 4px;
                 }
             }
         }

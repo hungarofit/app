@@ -27,10 +27,12 @@
              :class="{'is-active':isOpen}">
             <div class="navbar-start">
 
+                <!--
                 <a class="navbar-item"
                    href="#">
                     All Articles
                 </a>
+                -->
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <div class="navbar-link">
@@ -102,6 +104,7 @@
                 </div>
             </div>
 
+            <!--
             <div class="navbar-end">
 
                 <router-link class="navbar-item"
@@ -131,6 +134,8 @@
                 </div>
 
             </div>
+            -->
+
         </div>
     </nav>
 </template>

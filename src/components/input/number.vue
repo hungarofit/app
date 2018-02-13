@@ -6,6 +6,7 @@
             <input class="input has-text-right"
                    :class="{'is-fullwidth':expanded}"
                    type="number"
+                   @focus="onFocus($event)"
                    v-model.lazy="number" />
         </div>
         <div class="control"
@@ -16,14 +17,14 @@
         </div>
         <div class="control">
             <div class="button"
-                 @mousedown.prevent="start(true)">
-                <i class="fa fa-sm fa-plus"></i>
+                 @mousedown.prevent="start(false)">
+                <i class="fa fa-minus"></i>
             </div>
         </div>
         <div class="control">
             <div class="button"
-                 @mousedown.prevent="start(false)">
-                <i class="fa fa-minus"></i>
+                 @mousedown.prevent="start(true)">
+                <i class="fa fa-sm fa-plus"></i>
             </div>
         </div>
     </div>
@@ -57,7 +58,6 @@
     props: {
       value: {
         required: true,
-        type: Number,
         default: undefined,
       },
       required: {
@@ -146,6 +146,13 @@
       }
     },
     methods: {
+      onFocus(event) {
+        if(!this.value) {
+          this.$nextTick(() => {
+            event.target.select();
+          });
+        }
+      },
       start(decrement) {
         clearInterval(this.spin.timer);
         this.spin.delta = (decrement ? 1 : -1);
