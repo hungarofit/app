@@ -9,31 +9,31 @@ const router = new Router({
     {
       path: '/',
       name: 'index',
-      component: r => require(['views/index.vue'], r),
+      component: () => import('../views/index.vue'),
       meta: { title: 'Hungarofit' }
     },
     {
       path: '/register',
       name: 'register',
-      component: r => require(['views/register.vue'], r),
+      component: () => import('../views/register.vue'),
       meta: { title: 'Hungarofit / Register' }
     },
     {
       path: '/password',
       name: 'password',
-      component: r => require(['views/password.vue'], r),
+      component: () => import('../views/password.vue'),
       meta: { title: 'Hungarofit / Password' }
     },
     {
       path: '/login',
       name: 'login',
-      component: r => require(['views/login.vue'], r),
+      component: () => import('../views/login.vue'),
       meta: { title: 'Hungarofit / Login' }
     },
     {
       path: '/profile',
       name: 'profile',
-      component: r => require(['views/profile.vue'], r),
+      component: () => import('../views/profile.vue'),
       meta: { title: 'Hungarofit / Profile' }
     },
   ]

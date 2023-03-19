@@ -31,10 +31,13 @@ Vue.mixin(MixinSpaceThousands);
 
 Vue.config.productionTip = false;
 
-/* eslint-disable no-new */
+//import { createPinia, PiniaVuePlugin } from 'pinia'
+
+//Vue.use(PiniaVuePlugin)
+
 new Vue({
-  el: '#app',
-  store,
   router,
-  render: h => h(App)
-});
+  store,
+//  pinia: createPinia(),
+  render: (h) => h(App)
+}).$mount('#app')

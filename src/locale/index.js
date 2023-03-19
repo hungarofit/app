@@ -1,5 +1,5 @@
 
 export default {
-  hu_HU: require('./hu_HU.json'),
-  en_US: require('./en_US.json'),
+  hu_HU: import('./hu_HU.json'),
+  en_US: import('./en_US.json'),
 }

@@ -1,5 +1,4 @@
 
-import config from './../../config';
 
 export default {
   methods: {
@@ -11,7 +10,7 @@ export default {
         return url;
       }
       if(process.env.NODE_ENV !== 'production') {
-        return 'http://localhost:' + config.dev.port + '/' + url.replace(/^\//, '');
+        return 'http://localhost:' + 5173 + '/' + url.replace(/^\//, '');
       }
       return url;
     },
