@@ -154,7 +154,10 @@ watch(
 )
 
 onMounted(async () => {
-  await evaluate()
+  if ('Hungarofit' in window) {
+    await evaluate()
+  }
+  window.addEventListener('hungarofit.wasm_ready', evaluate)
 })
 
 const scoreTotal = computed(() => {

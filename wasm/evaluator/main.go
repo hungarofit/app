@@ -7,6 +7,8 @@ import (
 	hfit "github.com/hungarofit/evaluator"
 )
 
+const EVENT_READY = "hungarofit.wasm_ready"
+
 func evaluate(this js.Value, args0 []js.Value) interface{} {
 	handler := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		resolve := args[0]
@@ -65,14 +67,21 @@ func evaluate(this js.Value, args0 []js.Value) interface{} {
 }
 
 func registerCallbacks() {
-	g := js.Global().Get("Object").New()
+	jsg := js.Global()
+	var g js.Value
+	g = jsg.Get("Hungarofit")
+	if g.IsUndefined() || g.IsNull() {
+		g = jsg.Get("Object").New()
+		jsg.Set("Hungarofit", g)
+	}
 	g.Set("evaluate", js.FuncOf(evaluate))
-	js.Global().Set("Hungarofit", g)
+	e := jsg.Get("Event").New(EVENT_READY)
+	jsg.Get("window").Call("dispatchEvent", e)
 }
 
 func main() {
 	c := make(chan struct{})
 	registerCallbacks()
-	println("evaluator WASM loaded")
+	println("Hungarofit WASM loaded")
 	<-c
 }
