@@ -7,14 +7,12 @@ COPY . .
 RUN yarn install
 RUN yarn run build-only
 
-FROM node:18-alpine
+FROM m3ng9i/ran:latest
 
-WORKDIR /app
+WORKDIR /web
 
-COPY --from=base /app/dist ./dist
-
-RUN yarn global add http-server --prefix=/app
+COPY --from=base /app/dist /web
 
 EXPOSE 8080
 
-CMD [ "bin/http-server", "dist" ]
+ENTRYPOINT [ "/ran", "-p=8080", "-r=/web" ]
