@@ -1,7 +1,7 @@
 {
   "en": {
     "age": "Age",
-    "gender": "Sex",
+    "sex": "Sex",
     "female": "Female",
     "male": "Male",
     "aerob": "Aerob exercise",
@@ -27,12 +27,22 @@
     "pushup": "Pushups",
     "throwdouble": "Two handed throw",
     "throwsingle": "One handed throw",
-    "total": "Total"
+    "evaluation_score": "Evaluation",
+    "points": "points",
+    "evaluation_text": {
+      "terrible": "Terrible",
+      "awful": "Awful",
+      "bad": "Bad",
+      "mediocre": "Mediocre",
+      "good": "Good",
+      "great": "Great",
+      "excellent": "Excellent"
+    }
   },
 
   "hu": {
     "age": "Életkor",
-    "gender": "Nem",
+    "sex": "Nem",
     "female": "Nő",
     "male": "Férfi",
     "aerob": "Aerob gyakorlat",
@@ -58,6 +68,16 @@
     "pushup": "Fekvőtámasz",
     "throwdouble": "Kétkezes dobás hátra",
     "throwsingle": "Egykezes dobás előre",
-    "total": "Összesen"
+    "evaluation_score": "Értékelés",
+    "points": "pont",
+    "evaluation_text": {
+      "terrible": "Igen gyenge",
+      "awful": "Gyenge",
+      "bad": "Kifogásolható",
+      "mediocre": "Közepes",
+      "good": "Jó",
+      "great": "Kiváló",
+      "excellent": "Extra"
+    }
   }
 }

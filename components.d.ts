@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    BBadge: typeof import('bootstrap-vue-next')['BBadge']
     BNavText: typeof import('bootstrap-vue-next')['BNavText']
     BProgress: typeof import('bootstrap-vue-next')['BProgress']
     EvaluateScoreBar: typeof import('./src/components/EvaluateScoreBar.vue')['default']

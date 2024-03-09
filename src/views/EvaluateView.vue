@@ -7,8 +7,8 @@
           <input class="form-control" type="number" v-model="age" id="age" />
         </div>
         <div class="col-md-3 col-sm-6">
-          <label class="form-label" for="gender">{{ $t('gender') }}</label>
-          <select class="form-control" v-model.number="gender" id="gender">
+          <label class="form-label" for="sex">{{ $t('sex') }}</label>
+          <select class="form-control" v-model.number="sex" id="sex">
             <option value="2">{{ $t('female') }}</option>
             <option value="1">{{ $t('male') }}</option>
           </select>
@@ -29,76 +29,44 @@
       </div>
 
       <div class="row g-3 mt-4">
-        <EvaluateScoreBar
-          id="aerob"
-          :title="$t(aerobActivity)"
-          :exercise="aerobActivity"
-          v-model="aerob"
-          :data="response"
-        />
-        <EvaluateScoreBar
-          id="jump"
-          :title="$t('jump')"
-          :exercise="motorType + '-jump'"
-          v-model="jump"
-          :data="response"
-        />
-        <EvaluateScoreBar
-          id="situp"
-          :title="$t('situp')"
-          :exercise="motorType + '-situp'"
-          v-model="situp"
-          :data="response"
-        />
-        <EvaluateScoreBar
-          id="torso"
-          :title="$t('torso')"
-          :exercise="motorType + '-torso'"
-          v-model="torso"
-          :data="response"
-        />
-        <EvaluateScoreBar
-          id="pushup"
-          :title="$t('pushup')"
-          :exercise="motorType + '-pushup'"
-          v-model="pushup"
-          :data="response"
-        />
-        <EvaluateScoreBar
-          v-if="motorType == 'motor6'"
-          id="throwdouble"
-          title="Single handed throw"
-          :exercise="motorType + '-throwdouble'"
-          v-model="throwDouble"
-          :data="response"
-        />
-        <EvaluateScoreBar
-          v-if="motorType == 'motor6'"
-          id="throwsouble"
-          title="Double handed throw"
-          :exercise="motorType + '-throwsingle'"
-          v-model="throwSingle"
-          :data="response"
-        />
+        <EvaluateScoreBar id="aerob" :title="$t(aerobActivity)" :exercise="aerobActivity" v-model="aerob"
+          :data="response" />
+        <EvaluateScoreBar id="jump" :title="$t('jump')" :exercise="motorType + '-jump'" v-model="jump"
+          :data="response" />
+        <EvaluateScoreBar id="situp" :title="$t('situp')" :exercise="motorType + '-situp'" v-model="situp"
+          :data="response" />
+        <EvaluateScoreBar id="torso" :title="$t('torso')" :exercise="motorType + '-torso'" v-model="torso"
+          :data="response" />
+        <EvaluateScoreBar id="pushup" :title="$t('pushup')" :exercise="motorType + '-pushup'" v-model="pushup"
+          :data="response" />
+        <EvaluateScoreBar v-if="motorType == 'motor6'" id="throwdouble" title="Single handed throw"
+          :exercise="motorType + '-throwdouble'" v-model="throwDouble" :data="response" />
+        <EvaluateScoreBar v-if="motorType == 'motor6'" id="throwsouble" title="Double handed throw"
+          :exercise="motorType + '-throwsingle'" v-model="throwSingle" :data="response" />
       </div>
     </form>
 
-    <div class="chart-container text-end" v-if="scoreTotal">
-      <h4>{{ $t('total') }}: {{ scoreTotal }}</h4>
+    <div class="row g-3 mt-4" v-if="scoreTotal>0">
+      <!--
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <h4>{{ $t('evaluation_score') }}</h4>
+      </div>
+      -->
+      <div class="text-center">
+        <h1>
+          <b-badge :variant="scoreVariant">{{ $t('evaluation_text.' + scoreText ) }}</b-badge>
+        </h1>
+        <h4>{{ scoreTotal }} {{ $t('points') }}</h4>
+      </div>
     </div>
-
-    <!--    <div v-if="response">-->
-    <!--      <h3>Response Data:</h3>-->
-    <!--      <pre>{{ JSON.stringify(response, undefined, "  ") }}</pre>-->
-    <!--    </div>-->
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, computed, watch, onMounted} from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import EvaluateScoreBar from '@/components/EvaluateScoreBar.vue'
 
-const aerobExercises = ref({
+const aerobExercises = {
   'aerob-bike-12min': 'm',
   'aerob-run-1mile': 'min',
   'aerob-run-1mile5': 'min',
@@ -109,23 +77,55 @@ const aerobExercises = ref({
   'aerob-run-12min': 'm',
   'aerob-swim-12min': 'm',
   'aerob-swim-500m': 'min'
-})
-const age = ref(25)
-const gender = ref(2)
+}
+
+
+class EvaluationText {
+  static scores = [
+    [120.5, "excellent", "success"],
+    [100.5, "great", "success"],
+    [80.5, "good", "success"],
+    [60.5, "mediocre", "warning"],
+    [40.5, "bad", "warning"],
+    [20.5, "awful", "danger"],
+    [0, "terrible", "danger"],
+  ]
+  text(scoreTotal) {
+    for (const [key, value] of EvaluationText.scores) {
+      if (scoreTotal >= key) {
+        return value
+      }
+    }
+    return "unknown"
+  }
+  color(scoreTotal) {
+    for (const [key, _, color] of EvaluationText.scores) {
+      if (scoreTotal >= key) {
+        return color
+      }
+    }
+    return "unknown"
+  }
+}
+
+const evaluationText = new EvaluationText()
+
+const age = ref(24)
+const sex = ref(2)
 const motorType = ref('motor4')
-const aerobActivity = ref('aerob-run-12min')
-const aerob = ref(2400)
-const jump = ref(1.9)
-const situp = ref(84)
-const torso = ref(64)
-const pushup = ref(18)
-const throwDouble = ref(8.4)
-const throwSingle = ref(7.6)
+const aerobActivity = ref('aerob-bike-12min')
+const aerob = ref(6000)
+const jump = ref(2)
+const situp = ref(80)
+const torso = ref(80)
+const pushup = ref(20)
+const throwDouble = ref(0)
+const throwSingle = ref(0)
 const response = ref(null)
 
 const evaluate = async () => {
   response.value = null
-  if (gender.value < 1 || age.value < 6) {
+  if (sex.value < 1 || age.value < 6) {
     return
   }
   const results = {
@@ -139,16 +139,16 @@ const evaluate = async () => {
     results.throwdouble = throwDouble.value
     results.throwsingle = throwSingle.value
   }
-  response.value = await Hungarofit.evaluate(motorType.value, gender.value, age.value, results)
+  response.value = await Hungarofit.evaluate(motorType.value, sex.value, age.value, results)
 }
 
 watch(
-  [motorType, gender, age, jump, situp, torso, pushup, throwDouble, throwSingle, aerob],
+  [motorType, sex, age, jump, situp, torso, pushup, throwDouble, throwSingle, aerob],
   async () => {
     try {
       await evaluate()
     } catch (e) {
-      console.error(e)
+      console.warn(e)
     }
   }
 )
@@ -165,6 +165,20 @@ const scoreTotal = computed(() => {
     return 0
   }
   return response.value.total
+})
+
+const scoreText = computed(() => {
+  if (scoreTotal.value > 0) {
+    return evaluationText.text(scoreTotal.value)
+  }
+  return ''
+})
+
+const scoreVariant = computed(() => {
+  if (scoreTotal.value > 0) {
+    return evaluationText.color(scoreTotal.value)
+  }
+  return 'light'
 })
 </script>
 
