@@ -28,7 +28,7 @@
         </div>
       </div>
     
-      <div class="mt-2 alert alert-danger" v-if="age < motorMinAge">{{ $t('feedback.underage') }}</div>
+      <div class="mt-2 alert alert-danger" v-if="motorMinAge > 0 && age < motorMinAge">{{ $t('feedback.underage') }}</div>
 
       <div class="row g-3 mt-4">
         <EvaluateScoreBar id="aerob" :title="$t(aerobActivity)" :exercise="aerobActivity" v-model="aerob"
@@ -175,10 +175,14 @@ onMounted(async () => {
 })
 
 const motorMinAge = computed(() => {
-  if(motorType.value === 'motor4') {
-    return 4
+  switch(motorType.value) {
+    case 'motor4':
+      return 4
+    case 'motor6':
+      return 7
+    default:
+      return 0
   }
-  return 7
 })
 
 const scoreTotal = computed(() => {
