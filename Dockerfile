@@ -9,12 +9,13 @@ WORKDIR /wasm
 COPY ./wasm/evaluator/. ./
 RUN apt update \
 && apt -y install wget \
-&& wget https://go.dev/dl/go1.20.6.linux-amd64.tar.gz \
-&& rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.6.linux-amd64.tar.gz \
+&& wget https://go.dev/dl/go1.21.3.linux-amd64.tar.gz \
+&& rm -rf /usr/local/go \
+&& tar -C /usr/local -xzf go1.21.3.linux-amd64.tar.gz \
 && export PATH=$PATH:/usr/local/go/bin \
-&& wget https://github.com/tinygo-org/tinygo/releases/download/v0.28.1/tinygo_0.28.1_amd64.deb \
-&& dpkg -i tinygo_0.28.1_amd64.deb \
-&& rm -f tinygo_0.28.1_amd64.deb \
+&& wget https://github.com/tinygo-org/tinygo/releases/download/v0.31.1/tinygo_0.31.1_amd64.deb \
+&& dpkg -i tinygo_0.31.1_amd64.deb \
+&& rm -f tinygo_0.31.1_amd64.deb \
 && tinygo build -target wasm -no-debug -o evaluator.wasm
 
 FROM m3ng9i/ran:latest
