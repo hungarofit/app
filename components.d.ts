@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    BAlert: typeof import('bootstrap-vue-next')['BAlert']
     BBadge: typeof import('bootstrap-vue-next')['BBadge']
     BNavText: typeof import('bootstrap-vue-next')['BNavText']
     BProgress: typeof import('bootstrap-vue-next')['BProgress']

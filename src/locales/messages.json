@@ -37,6 +37,9 @@
       "good": "Good",
       "great": "Great",
       "excellent": "Excellent"
+    },
+    "feedback": {
+      "underage": "Too young for this exercise"
     }
   },
 
@@ -78,6 +81,9 @@
       "good": "Jó",
       "great": "Kiváló",
       "excellent": "Extra"
+    },
+    "feedback": {
+      "underage": "Túl fiatal ehhez a gyakorlathoz"
     }
   }
 }

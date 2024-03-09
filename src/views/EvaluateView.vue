@@ -4,7 +4,7 @@
       <div class="row g-3">
         <div class="col-md-2 col-sm-6">
           <label class="form-label" for="jump">{{ $t('age') }}</label>
-          <input class="form-control" type="number" v-model="age" id="age" />
+          <input class="form-control" type="number" v-model="age" :min="motorMinAge" id="age" />
         </div>
         <div class="col-md-3 col-sm-6">
           <label class="form-label" for="sex">{{ $t('sex') }}</label>
@@ -27,6 +27,8 @@
           </select>
         </div>
       </div>
+    
+      <div class="mt-2 alert alert-danger" v-if="age < motorMinAge">{{ $t('feedback.underage') }}</div>
 
       <div class="row g-3 mt-4">
         <EvaluateScoreBar id="aerob" :title="$t(aerobActivity)" :exercise="aerobActivity" v-model="aerob"
@@ -137,7 +139,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const evaluate = async () => {
   response.value = null
-  if (sex.value < 1 || age.value < 6) {
+  if (sex.value < 1 || age.value < motorMinAge.value) {
     return
   }
   const results = {
@@ -170,6 +172,13 @@ onMounted(async () => {
     await evaluate()
   }
   window.addEventListener('hungarofit.wasm_ready', evaluate)
+})
+
+const motorMinAge = computed(() => {
+  if(motorType.value === 'motor4') {
+    return 4
+  }
+  return 7
 })
 
 const scoreTotal = computed(() => {
