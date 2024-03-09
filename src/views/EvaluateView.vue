@@ -67,7 +67,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import EvaluateScoreBar from '@/components/EvaluateScoreBar.vue'
 
 const aerobExercises = {
-  'aerob-bike-12min': 'm',
+  // 'aerob-bike-12min': 'm',
   'aerob-run-1mile': 'min',
   'aerob-run-1mile5': 'min',
   'aerob-run-2km': 'min',
@@ -110,18 +110,30 @@ class EvaluationText {
 
 const evaluationText = new EvaluationText()
 
-const age = ref(24)
-const sex = ref(2)
-const motorType = ref('motor4')
-const aerobActivity = ref('aerob-bike-12min')
-const aerob = ref(6000)
-const jump = ref(2)
-const situp = ref(80)
-const torso = ref(80)
-const pushup = ref(20)
+const age = ref(0)
+const sex = ref(0)
+const motorType = ref('')
+const aerobActivity = ref('')
+const aerob = ref(0)
+const jump = ref(0)
+const situp = ref(0)
+const torso = ref(0)
+const pushup = ref(0)
 const throwDouble = ref(0)
 const throwSingle = ref(0)
 const response = ref(null)
+
+if (process.env.NODE_ENV !== 'production') {
+  age.value = 24
+  sex.value = 2
+  motorType.value = 'motor4'
+  aerobActivity.value = 'aerob-swim-12min'
+  aerob.value = 500
+  jump.value = 2.1
+  situp.value = 80
+  torso.value = 80
+  pushup.value = 20
+}
 
 const evaluate = async () => {
   response.value = null
