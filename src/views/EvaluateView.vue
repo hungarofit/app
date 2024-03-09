@@ -32,7 +32,7 @@
     <div class="row g-3 mt-4" v-if="showExerciseInputs">
       <EvaluateScoreBar id="aerob" :title="$t(aerobActivity)" :unit="aerobUnit" :exercise="aerobActivity" v-model="aerob"
         :data="response" />
-      <EvaluateScoreBar id="jump" :title="$t('jump')" :exercise="motorType + '-jump'" v-model="jump"
+      <EvaluateScoreBar id="jump" :title="$t('jump')" unit="meter" :exercise="motorType + '-jump'" v-model="jump"
         :data="response" />
       <EvaluateScoreBar id="situp" :title="$t('situp')" :exercise="motorType + '-situp'" v-model="situp"
         :data="response" />
