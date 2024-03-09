@@ -14,6 +14,8 @@
         }
       }
       const go = new Go()
+      // @see: https://github.com/tinygo-org/tinygo/issues/1140#issuecomment-1783897193
+      go.importObject.gojs["syscall/js.finalizeRef"] = _ => 0
       let mod, inst
       WebAssembly.instantiateStreaming(fetch("/wasm/evaluator.wasm"), go.importObject).then(async (result) => {
         mod = result.module
