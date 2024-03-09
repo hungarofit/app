@@ -21,7 +21,7 @@
       </div>
       <div class="col-md-4 col-sm-6">
         <label class="form-label" for="aerobActivity">{{ $t('aerob') }}</label>
-        <select class="form-control" v-model="aerobActivity" id="aerobActivity">
+        <select class="form-control" v-model="aerobType" id="aerobActivity">
           <option v-for="(_, v) in aerobExercises" :key="v" :value="v">{{ $t(v) }}</option>
         </select>
       </div>
@@ -30,9 +30,9 @@
     <div class="mt-2 alert alert-danger" v-if="isHeaderFilled && age < minAge">{{ $t('feedback.underage') }}</div>
 
     <div class="row g-3 mt-4" v-if="showExerciseInputs">
-      <EvaluateScoreBar id="aerob" :title="$t(aerobActivity)" :unit="aerobUnit" :exercise="aerobActivity" v-model="aerob"
+      <EvaluateScoreBar id="aerob" :title="$t(aerobType)" :unit="aerobUnit" :exercise="aerobType" v-model="aerob"
         :data="response" />
-      <EvaluateScoreBar id="jump" :title="$t('jump')" unit="meter" :exercise="motorType + '-jump'" v-model="jump"
+      <EvaluateScoreBar id="jump" :title="$t('jump')" unit="m" :exercise="motorType + '-jump'" v-model="jump"
         :data="response" />
       <EvaluateScoreBar id="situp" :title="$t('situp')" :exercise="motorType + '-situp'" v-model="situp"
         :data="response" />
@@ -68,15 +68,15 @@ import EvaluateScoreBar from '@/components/EvaluateScoreBar.vue'
 
 const aerobExercises = {
   // 'aerob-bike-12min': 'm',
-  'aerob-run-1mile': 'min.sec',
-  'aerob-run-1mile5': 'min.sec',
-  'aerob-run-2km': 'min.sec',
-  'aerob-run-2mile': 'min.sec',
-  'aerob-run-3km': 'min.sec',
-  'aerob-run-6min': 'meter',
-  'aerob-run-12min': 'meter',
-  'aerob-swim-12min': 'meter',
-  'aerob-swim-500m': 'min.sec'
+  'aerob-run-1mile': 'min',
+  'aerob-run-1mile5': 'min',
+  'aerob-run-2km': 'min',
+  'aerob-run-2mile': 'min',
+  'aerob-run-3km': 'min',
+  'aerob-run-6min': 'm',
+  'aerob-run-12min': 'm',
+  'aerob-swim-12min': 'm',
+  'aerob-swim-500m': 'min'
 }
 
 
@@ -113,7 +113,7 @@ const evaluationText = new EvaluationText()
 const age = ref(0)
 const sex = ref('')
 const motorType = ref('')
-const aerobActivity = ref('')
+const aerobType = ref('')
 const aerob = ref(0)
 const jump = ref(0)
 const situp = ref(0)
@@ -124,14 +124,14 @@ const throwSingle = ref(0)
 const response = ref(null)
 
 const aerobUnit = computed(() => {
-  return aerobExercises[aerobActivity.value]
+  return aerobExercises[aerobType.value]
 })
 
 if (process.env.NODE_ENV !== 'production') {
   age.value = 24
   sex.value = 2
   motorType.value = 'motor4'
-  aerobActivity.value = 'aerob-swim-12min'
+  aerobType.value = 'aerob-swim-12min'
   aerob.value = 500
   jump.value = 2.1
   situp.value = 80
@@ -149,7 +149,7 @@ const evaluate = async () => {
     situp: situp.value,
     torso: torso.value,
     pushup: pushup.value,
-    [aerobActivity.value]: aerob.value
+    [aerobType.value]: aerob.value
   }
   if (motorType.value === 'motor6') {
     results.throwdouble = throwDouble.value
@@ -159,7 +159,7 @@ const evaluate = async () => {
 }
 
 watch(
-  [motorType, sex, age, jump, situp, torso, pushup, throwDouble, throwSingle, aerob],
+  [motorType, aerobType, sex, age, jump, situp, torso, pushup, throwDouble, throwSingle, aerob],
   async () => {
     try {
       await evaluate()
@@ -180,7 +180,7 @@ const isHeaderFilled = computed(() => {
   return age.value > 0 &&
     sex.value > 0 &&
     motorType.value.length > 0 &&
-    aerobActivity.value.length > 0
+    aerobType.value.length > 0
 })
 
 const showExerciseInputs = computed(() => {

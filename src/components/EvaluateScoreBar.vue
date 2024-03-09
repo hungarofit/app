@@ -25,7 +25,7 @@ const props = defineProps({
   },
   unit: {
     type: String,
-    default: 'db',
+    default: 'n',
   }
 })
 
@@ -38,10 +38,10 @@ const step = computed(() => {
 </script>
 
 <template>
-  <label class="form-label" for="aerob">
+  <label class="form-label" :for="props.id">
     {{ props.title }}
   </label>
-  <div class="col-lg-3 col-md-4 col-sm-6">
+  <div class="col-lg-3 col-md-4 col-sm-6 mt-0">
     <div class="input-group">
       <input
         class="form-control"
@@ -51,10 +51,10 @@ const step = computed(() => {
         :value="modelValue"
         @input="$emit('update:modelValue', parseFloat($event.target.value))"
       />
-      <span class="input-group-text">{{ props.unit }}</span>
+      <span class="input-group-text">{{ $t('unit.' + props.unit) }}</span>
     </div>
   </div>
-  <div class="col-lg-9 col-md-8 col-sm-6">
+  <div class="col-lg-9 col-md-8 col-sm-6 mt-0">
     <b-progress
       style="height: 38px;"
       v-if="props.data"

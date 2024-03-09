@@ -18,6 +18,11 @@
     "motor4": "Mini Hungarofit",
     "motor6": "Hungarofit (for 7-25 yo)",
     "challenge": "Challenge",
+    "unit": {
+      "m": "meters",
+      "min": "min.sec",
+      "n": "count"
+    },
     "run": "Running",
     "swim": "Swimming",
     "bike": "Bicycle",
@@ -63,6 +68,11 @@
     "motor4": "Mini Hungarofit (4-99+ év)",
     "motor6": "Hungarofit (7-25 év)",
     "challenge": "Próba",
+    "unit": {
+      "m": "méter",
+      "min": "perc.mp",
+      "n": "db"
+    },
     "run": "Futás",
     "swim": "Úszás",
     "bike": "Bicikli",
