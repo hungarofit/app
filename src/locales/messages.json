@@ -29,6 +29,7 @@
     "throwsingle": "One handed throw",
     "evaluation_score": "Evaluation",
     "points": "points",
+    "evaluation_text.": "?",
     "evaluation_text": {
       "terrible": "Terrible",
       "awful": "Awful",
@@ -73,6 +74,7 @@
     "throwsingle": "Tömöttlabda lökés előre egykézzel",
     "evaluation_score": "Értékelés",
     "points": "pont",
+    "evaluation_text.": "?",
     "evaluation_text": {
       "terrible": "Igen gyenge",
       "awful": "Gyenge",

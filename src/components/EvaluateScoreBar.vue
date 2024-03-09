@@ -22,6 +22,10 @@ const props = defineProps({
   },
   data: {
     type: Object
+  },
+  unit: {
+    type: String,
+    default: 'db',
   }
 })
 
@@ -34,25 +38,30 @@ const step = computed(() => {
 </script>
 
 <template>
-  <div class="col-lg-2 col-md-4 col-sm-6">
-    <label class="form-label" for="aerob">
-      {{ props.title }}
-    </label>
-    <input
-      class="form-control"
-      type="number"
-      :step="step"
-      :id="id"
-      :value="modelValue"
-      @input="$emit('update:modelValue', parseFloat($event.target.value))"
-    />
+  <label class="form-label" for="aerob">
+    {{ props.title }}
+  </label>
+  <div class="col-lg-3 col-md-4 col-sm-6">
+    <div class="input-group">
+      <input
+        class="form-control"
+        type="number"
+        :step="step"
+        :id="id"
+        :value="modelValue"
+        @input="$emit('update:modelValue', parseFloat($event.target.value))"
+      />
+      <span class="input-group-text">{{ props.unit }}</span>
+    </div>
   </div>
-  <div class="col-lg-10 col-md-8 col-sm-6">
+  <div class="col-lg-9 col-md-8 col-sm-6">
     <b-progress
+      style="height: 38px;"
       v-if="props.data"
-      :max="props.data.results[exercise].score_max"
-      :value="props.data.results[exercise].score"
-      :show-value="true"
-    />
+      variant="secondary"
+      :max="props.data?.results[exercise]?.score_max"
+      :value="props.data?.results[exercise]?.score"
+      :show-value="true">
+    </b-progress>
   </div>
 </template>

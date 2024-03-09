@@ -1,54 +1,52 @@
 <template>
   <div class="mt-4">
-    <form @submit.prevent="submitForm">
-      <div class="row g-3">
-        <div class="col-md-2 col-sm-6">
-          <label class="form-label" for="jump">{{ $t('age') }}</label>
-          <input class="form-control" type="number" v-model="age" :min="motorMinAge" id="age" />
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <label class="form-label" for="sex">{{ $t('sex') }}</label>
-          <select class="form-control" v-model.number="sex" id="sex">
-            <option value="2">{{ $t('female') }}</option>
-            <option value="1">{{ $t('male') }}</option>
-          </select>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <label class="form-label" for="motorType">{{ $t('challenge') }}</label>
-          <select class="form-control" v-model="motorType" id="motorType">
-            <option value="motor4">{{ $t('motor4') }}</option>
-            <option value="motor6">{{ $t('motor6') }}</option>
-          </select>
-        </div>
-        <div class="col-md-4 col-sm-6">
-          <label class="form-label" for="aerobActivity">{{ $t('aerob') }}</label>
-          <select class="form-control" v-model="aerobActivity" id="aerobActivity">
-            <option v-for="(_, v) in aerobExercises" :key="v" :value="v">{{ $t(v) }}</option>
-          </select>
-        </div>
+    <div class="row g-3">
+      <div class="col-md-2 col-sm-6">
+        <label class="form-label" for="jump">{{ $t('age') }}</label>
+        <input class="form-control" type="number" v-model="age" :min="minAge" id="age" />
       </div>
-    
-      <div class="mt-2 alert alert-danger" v-if="motorMinAge > 0 && age < motorMinAge">{{ $t('feedback.underage') }}</div>
-
-      <div class="row g-3 mt-4">
-        <EvaluateScoreBar id="aerob" :title="$t(aerobActivity)" :exercise="aerobActivity" v-model="aerob"
-          :data="response" />
-        <EvaluateScoreBar id="jump" :title="$t('jump')" :exercise="motorType + '-jump'" v-model="jump"
-          :data="response" />
-        <EvaluateScoreBar id="situp" :title="$t('situp')" :exercise="motorType + '-situp'" v-model="situp"
-          :data="response" />
-        <EvaluateScoreBar id="torso" :title="$t('torso')" :exercise="motorType + '-torso'" v-model="torso"
-          :data="response" />
-        <EvaluateScoreBar id="pushup" :title="$t('pushup')" :exercise="motorType + '-pushup'" v-model="pushup"
-          :data="response" />
-        <EvaluateScoreBar v-if="motorType == 'motor6'" id="throwdouble" title="Single handed throw"
-          :exercise="motorType + '-throwdouble'" v-model="throwDouble" :data="response" />
-        <EvaluateScoreBar v-if="motorType == 'motor6'" id="throwsouble" title="Double handed throw"
-          :exercise="motorType + '-throwsingle'" v-model="throwSingle" :data="response" />
+      <div class="col-md-3 col-sm-6">
+        <label class="form-label" for="sex">{{ $t('sex') }}</label>
+        <select class="form-control" v-model.number="sex" id="sex">
+          <option value="2">{{ $t('female') }}</option>
+          <option value="1">{{ $t('male') }}</option>
+        </select>
       </div>
-    </form>
+      <div class="col-md-3 col-sm-6">
+        <label class="form-label" for="motorType">{{ $t('challenge') }}</label>
+        <select class="form-control" v-model="motorType" id="motorType">
+          <option value="motor4">{{ $t('motor4') }}</option>
+          <option value="motor6">{{ $t('motor6') }}</option>
+        </select>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <label class="form-label" for="aerobActivity">{{ $t('aerob') }}</label>
+        <select class="form-control" v-model="aerobActivity" id="aerobActivity">
+          <option v-for="(_, v) in aerobExercises" :key="v" :value="v">{{ $t(v) }}</option>
+        </select>
+      </div>
+    </div>
+  
+    <div class="mt-2 alert alert-danger" v-if="isHeaderFilled && age < minAge">{{ $t('feedback.underage') }}</div>
 
-    <div class="row g-3 mt-4" v-if="scoreTotal>0">
+    <div class="row g-3 mt-4" v-if="showExerciseInputs">
+      <EvaluateScoreBar id="aerob" :title="$t(aerobActivity)" :unit="aerobUnit" :exercise="aerobActivity" v-model="aerob"
+        :data="response" />
+      <EvaluateScoreBar id="jump" :title="$t('jump')" :exercise="motorType + '-jump'" v-model="jump"
+        :data="response" />
+      <EvaluateScoreBar id="situp" :title="$t('situp')" :exercise="motorType + '-situp'" v-model="situp"
+        :data="response" />
+      <EvaluateScoreBar id="torso" :title="$t('torso')" :exercise="motorType + '-torso'" v-model="torso"
+        :data="response" />
+      <EvaluateScoreBar id="pushup" :title="$t('pushup')" :exercise="motorType + '-pushup'" v-model="pushup"
+        :data="response" />
+      <EvaluateScoreBar v-if="motorType == 'motor6'" id="throwdouble" unit="m" :title="$t('throwdouble')"
+        :exercise="motorType + '-throwdouble'" v-model="throwDouble" :data="response" />
+      <EvaluateScoreBar v-if="motorType == 'motor6'" id="throwdouble" unit="m" :title="$t('throwsingle')"
+        :exercise="motorType + '-throwsingle'" v-model="throwSingle" :data="response" />
+    </div>
+
+    <div class="row g-3 mt-4" v-if="showFinalScore">
       <!--
       <div class="col-lg-2 col-md-4 col-sm-6">
         <h4>{{ $t('evaluation_score') }}</h4>
@@ -70,15 +68,15 @@ import EvaluateScoreBar from '@/components/EvaluateScoreBar.vue'
 
 const aerobExercises = {
   // 'aerob-bike-12min': 'm',
-  'aerob-run-1mile': 'min',
-  'aerob-run-1mile5': 'min',
-  'aerob-run-2km': 'min',
-  'aerob-run-2mile': 'min',
-  'aerob-run-3km': 'min',
-  'aerob-run-6min': 'm',
-  'aerob-run-12min': 'm',
-  'aerob-swim-12min': 'm',
-  'aerob-swim-500m': 'min'
+  'aerob-run-1mile': 'min.sec',
+  'aerob-run-1mile5': 'min.sec',
+  'aerob-run-2km': 'min.sec',
+  'aerob-run-2mile': 'min.sec',
+  'aerob-run-3km': 'min.sec',
+  'aerob-run-6min': 'meter',
+  'aerob-run-12min': 'meter',
+  'aerob-swim-12min': 'meter',
+  'aerob-swim-500m': 'min.sec'
 }
 
 
@@ -113,7 +111,7 @@ class EvaluationText {
 const evaluationText = new EvaluationText()
 
 const age = ref(0)
-const sex = ref(0)
+const sex = ref('')
 const motorType = ref('')
 const aerobActivity = ref('')
 const aerob = ref(0)
@@ -124,6 +122,10 @@ const pushup = ref(0)
 const throwDouble = ref(0)
 const throwSingle = ref(0)
 const response = ref(null)
+
+const aerobUnit = computed(() => {
+  return aerobExercises[aerobActivity.value]
+})
 
 if (process.env.NODE_ENV !== 'production') {
   age.value = 24
@@ -139,7 +141,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const evaluate = async () => {
   response.value = null
-  if (sex.value < 1 || age.value < motorMinAge.value) {
+  if (!showExerciseInputs.value) {
     return
   }
   const results = {
@@ -174,7 +176,22 @@ onMounted(async () => {
   window.addEventListener('hungarofit.wasm_ready', evaluate)
 })
 
-const motorMinAge = computed(() => {
+const isHeaderFilled = computed(() => {
+  return age.value > 0 &&
+    sex.value > 0 &&
+    motorType.value.length > 0 &&
+    aerobActivity.value.length > 0
+})
+
+const showExerciseInputs = computed(() => {
+  return isHeaderFilled.value && age.value >= minAge.value
+})
+
+const showFinalScore = computed(() => {
+  return showExerciseInputs.value && scoreTotal.value >= 0
+})
+
+const minAge = computed(() => {
   switch(motorType.value) {
     case 'motor4':
       return 4
