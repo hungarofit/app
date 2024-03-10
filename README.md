@@ -50,3 +50,6 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+2014 © _Dr. Ildikó Dr. Fehérné Mérey_
+
